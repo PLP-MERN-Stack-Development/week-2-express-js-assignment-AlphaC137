@@ -2,7 +2,7 @@
 
 A complete RESTful API built with Express.js featuring CRUD operations, custom middleware, error handling, and advanced features like filtering, pagination, and search.
 
-## 🚀 Features
+## Features
 
 - **Complete CRUD Operations** for products
 - **Custom Middleware** for logging, authentication, and validation
@@ -11,7 +11,7 @@ A complete RESTful API built with Express.js featuring CRUD operations, custom m
 - **RESTful Architecture** following best practices
 - **In-memory Database** for easy testing and development
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 ### Prerequisites
 - Node.js (v18 or higher recommended)
@@ -20,10 +20,6 @@ A complete RESTful API built with Express.js featuring CRUD operations, custom m
 ### Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd week-2-express-js-assignment
-   ```
 
 2. **Install dependencies**
    ```bash
@@ -44,7 +40,7 @@ A complete RESTful API built with Express.js featuring CRUD operations, custom m
    - Server runs on: `http://localhost:3000`
    - API documentation: `http://localhost:3000/`
 
-## 📚 API Documentation
+## API Documentation
 
 ### Base URL
 ```
@@ -126,7 +122,7 @@ GET /api/products/1
 
 ---
 
-#### **POST /api/products** 🔒
+#### **POST /api/products** 
 Create a new product (requires authentication).
 
 **Headers:**
@@ -163,7 +159,7 @@ x-api-key: your-secret-api-key
 
 ---
 
-#### **PUT /api/products/:id** 🔒
+#### **PUT /api/products/:id** 
 Update an existing product (requires authentication).
 
 **Headers:**
@@ -185,7 +181,7 @@ x-api-key: your-secret-api-key
 
 ---
 
-#### **DELETE /api/products/:id** 🔒
+#### **DELETE /api/products/:id** 
 Delete a product (requires authentication).
 
 **Headers:**
@@ -248,7 +244,7 @@ Get product statistics and analytics.
 }
 ```
 
-## 🧪 Testing Examples
+## Testing Examples
 
 ### Using curl
 
@@ -284,7 +280,7 @@ curl "http://localhost:3000/api/products/search?q=laptop"
    - `api_key`: `your-secret-api-key`
 3. **Test all CRUD operations** with the provided examples
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 ├── server.js          # Main application file
@@ -294,7 +290,7 @@ curl "http://localhost:3000/api/products/search?q=laptop"
 └── Week2-Assignment.md # Assignment requirements
 ```
 
-## 🔧 Middleware Implementation
+## Middleware Implementation
 
 ### Custom Logger Middleware
 Logs all incoming requests with timestamp, method, and URL.
@@ -316,7 +312,7 @@ Validates product data for creation and updates:
 - Detailed error messages
 - Global error catching for async routes
 
-## 🛡️ Error Handling
+## Error Handling
 
 The API implements comprehensive error handling:
 
@@ -325,7 +321,7 @@ The API implements comprehensive error handling:
 - **404 Not Found**: Product or route not found
 - **500 Internal Server Error**: Unexpected server errors
 
-## 🎯 Advanced Features
+## Advanced Features
 
 ### Filtering
 Filter products by:
@@ -347,7 +343,7 @@ Get insights about your product catalog:
 - Stock status distribution
 - Price analytics
 
-## 📝 Environment Variables
+## Environment Variables
 
 Create a `.env` file based on `.env.example`:
 
@@ -356,29 +352,3 @@ PORT=3000
 API_KEY=your-secret-api-key
 NODE_ENV=development
 ```
-
-## 🚀 Deployment
-
-The application is ready for deployment to platforms like:
-- Heroku
-- Vercel
-- Railway
-- DigitalOcean App Platform
-
-Make sure to set the `PORT` environment variable for production deployment.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the ISC License - see the package.json file for details.
-
----
-
-**🎉 Assignment Complete!** This implementation fulfills all requirements for the Week 2 Express.js assignment, including CRUD operations, middleware, error handling, and advanced features.

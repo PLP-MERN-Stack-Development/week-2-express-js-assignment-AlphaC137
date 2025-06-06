@@ -1,15 +1,10 @@
-// server.js - Complete Express.js RESTful API for Week 2 assignment
-
-// Import required modules
 const express = require('express');
 const bodyParser = require('body-parser');
 const { v4: uuidv4 } = require('uuid');
 
-// Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Custom Error Classes
 class NotFoundError extends Error {
   constructor(message) {
     super(message);
@@ -26,16 +21,12 @@ class ValidationError extends Error {
   }
 }
 
-// Custom Middleware Functions
-
-// Logger middleware - logs request method, URL, and timestamp
 const loggerMiddleware = (req, res, next) => {
   const timestamp = new Date().toISOString();
   console.log(`[${timestamp}] ${req.method} ${req.url}`);
   next();
 };
 
-// Authentication middleware - checks for API key in headers
 const authMiddleware = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
   if (!apiKey || apiKey !== 'your-secret-api-key') {
@@ -46,7 +37,6 @@ const authMiddleware = (req, res, next) => {
   next();
 };
 
-// Validation middleware for product creation and updates
 const validateProduct = (req, res, next) => {
   const { name, description, price, category, inStock } = req.body;
   const errors = [];
@@ -81,11 +71,9 @@ const validateProduct = (req, res, next) => {
   next();
 };
 
-// Apply global middleware
 app.use(loggerMiddleware);
 app.use(bodyParser.json());
 
-// Handle JSON parsing errors
 app.use((error, req, res, next) => {
   if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
     return res.status(400).json({ error: 'Invalid JSON format' });
@@ -93,7 +81,6 @@ app.use((error, req, res, next) => {
   next();
 });
 
-// Sample in-memory products database
 let products = [
   {
     id: '1',
@@ -137,14 +124,10 @@ let products = [
   }
 ];
 
-// Helper function to wrap async route handlers
 const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 
-// ROUTES
-
-// Root route - Hello World
 app.get('/', (req, res) => {
   res.json({
     message: 'Welcome to the Product API!',
@@ -161,7 +144,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// GET /api/products - Get all products with filtering and pagination
+
 app.get('/api/products', asyncHandler((req, res) => {
   let filteredProducts = [...products];
   
@@ -203,7 +186,7 @@ app.get('/api/products', asyncHandler((req, res) => {
   });
 }));
 
-// GET /api/products/search - Search products by name
+// Search products by name
 app.get('/api/products/search', asyncHandler((req, res) => {
   const { q } = req.query;
   
@@ -226,7 +209,7 @@ app.get('/api/products/search', asyncHandler((req, res) => {
   });
 }));
 
-// GET /api/stats - Get product statistics
+// Get product statistics
 app.get('/api/stats', asyncHandler((req, res) => {
   const stats = products.reduce((acc, product) => {
     // Count by category
@@ -264,7 +247,7 @@ app.get('/api/stats', asyncHandler((req, res) => {
   res.json(stats);
 }));
 
-// GET /api/products/:id - Get a specific product by ID
+// Get a specific product by ID
 app.get('/api/products/:id', asyncHandler((req, res) => {
   const product = products.find(p => p.id === req.params.id);
   
@@ -275,7 +258,7 @@ app.get('/api/products/:id', asyncHandler((req, res) => {
   res.json(product);
 }));
 
-// POST /api/products - Create a new product (protected route)
+// Create a new product (protected route)
 app.post('/api/products', authMiddleware, validateProduct, asyncHandler((req, res) => {
   const { name, description, price, category, inStock = true } = req.body;
   
@@ -296,7 +279,7 @@ app.post('/api/products', authMiddleware, validateProduct, asyncHandler((req, re
   });
 }));
 
-// PUT /api/products/:id - Update an existing product (protected route)
+// Update an existing product (protected route)
 app.put('/api/products/:id', authMiddleware, validateProduct, asyncHandler((req, res) => {
   const productIndex = products.findIndex(p => p.id === req.params.id);
   
@@ -323,7 +306,7 @@ app.put('/api/products/:id', authMiddleware, validateProduct, asyncHandler((req,
   });
 }));
 
-// DELETE /api/products/:id - Delete a product (protected route)
+// Delete a product (protected route)
 app.delete('/api/products/:id', authMiddleware, asyncHandler((req, res) => {
   const productIndex = products.findIndex(p => p.id === req.params.id);
   
@@ -339,7 +322,6 @@ app.delete('/api/products/:id', authMiddleware, asyncHandler((req, res) => {
   });
 }));
 
-// 404 handler for undefined routes
 app.use('*', (req, res) => {
   res.status(404).json({
     error: 'Route not found',
@@ -347,7 +329,6 @@ app.use('*', (req, res) => {
   });
 });
 
-// Global error handling middleware
 const errorHandler = (err, req, res, next) => {
   console.error(`Error: ${err.message}`);
   console.error(err.stack);
@@ -376,9 +357,9 @@ app.use(errorHandler);
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(`📖 API Documentation available at http://localhost:${PORT}/`);
-  console.log(`🔑 Use API key "your-secret-api-key" in x-api-key header for protected routes`);
+  console.log(` Server is running on http://localhost:${PORT}`);
+  console.log(` API Documentation available at http://localhost:${PORT}/`);
+  console.log(` Use API key "your-secret-api-key" in x-api-key header for protected routes`);
 });
 
 // Export the app for testing purposes
