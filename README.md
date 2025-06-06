@@ -1,63 +1,384 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19713700&assignment_repo_type=AssignmentRepo)
-# Express.js RESTful API Assignment
+# Express.js RESTful API Assignment - Week 2
 
-This assignment focuses on building a RESTful API using Express.js, implementing proper routing, middleware, and error handling.
+A complete RESTful API built with Express.js featuring CRUD operations, custom middleware, error handling, and advanced features like filtering, pagination, and search.
 
-## Assignment Overview
+## 🚀 Features
 
-You will:
-1. Set up an Express.js server
-2. Create RESTful API routes for a product resource
-3. Implement custom middleware for logging, authentication, and validation
-4. Add comprehensive error handling
-5. Develop advanced features like filtering, pagination, and search
+- **Complete CRUD Operations** for products
+- **Custom Middleware** for logging, authentication, and validation
+- **Comprehensive Error Handling** with custom error classes
+- **Advanced Features**: filtering, pagination, search, and statistics
+- **RESTful Architecture** following best practices
+- **In-memory Database** for easy testing and development
 
-## Getting Started
+## 🛠️ Setup Instructions
 
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Install dependencies:
+### Prerequisites
+- Node.js (v18 or higher recommended)
+- npm (comes with Node.js)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd week-2-express-js-assignment
    ```
+
+2. **Install dependencies**
+   ```bash
    npm install
    ```
-4. Run the server:
-   ```
+
+3. **Start the server**
+   ```bash
    npm start
    ```
+   
+   Or for development with auto-restart:
+   ```bash
+   npm run dev
+   ```
 
-## Files Included
+4. **Access the API**
+   - Server runs on: `http://localhost:3000`
+   - API documentation: `http://localhost:3000/`
 
-- `Week2-Assignment.md`: Detailed assignment instructions
-- `server.js`: Starter Express.js server file
-- `.env.example`: Example environment variables file
+## 📚 API Documentation
 
-## Requirements
+### Base URL
+```
+http://localhost:3000
+```
 
-- Node.js (v18 or higher)
-- npm or yarn
-- Postman, Insomnia, or curl for API testing
+### Authentication
+Protected routes require an API key in the request headers:
+```
+x-api-key: your-secret-api-key
+```
 
-## API Endpoints
+### Endpoints
 
-The API will have the following endpoints:
+#### **GET /** 
+Get API documentation and available endpoints.
 
-- `GET /api/products`: Get all products
-- `GET /api/products/:id`: Get a specific product
-- `POST /api/products`: Create a new product
-- `PUT /api/products/:id`: Update a product
-- `DELETE /api/products/:id`: Delete a product
+**Response:**
+```json
+{
+  "message": "Welcome to the Product API!",
+  "endpoints": { ... },
+  "note": "Protected routes require x-api-key header"
+}
+```
 
-## Submission
+---
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+#### **GET /api/products**
+Get all products with optional filtering and pagination.
 
-1. Complete all the required API endpoints
-2. Implement the middleware and error handling
-3. Document your API in the README.md
-4. Include examples of requests and responses
+**Query Parameters:**
+- `category` (string): Filter by product category
+- `inStock` (boolean): Filter by stock status (`true`/`false`)
+- `page` (number): Page number for pagination (default: 1)
+- `limit` (number): Number of products per page (default: 10)
 
-## Resources
+**Example Request:**
+```
+GET /api/products?category=electronics&page=1&limit=5
+```
 
-- [Express.js Documentation](https://expressjs.com/)
-- [RESTful API Design Best Practices](https://restfulapi.net/)
-- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) 
+**Response:**
+```json
+{
+  "products": [...],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 2,
+    "totalProducts": 8,
+    "productsPerPage": 5,
+    "hasNextPage": true,
+    "hasPrevPage": false
+  }
+}
+```
+
+---
+
+#### **GET /api/products/:id**
+Get a specific product by ID.
+
+**Example Request:**
+```
+GET /api/products/1
+```
+
+**Response:**
+```json
+{
+  "id": "1",
+  "name": "Laptop",
+  "description": "High-performance laptop with 16GB RAM",
+  "price": 1200,
+  "category": "electronics",
+  "inStock": true
+}
+```
+
+---
+
+#### **POST /api/products** 🔒
+Create a new product (requires authentication).
+
+**Headers:**
+```
+Content-Type: application/json
+x-api-key: your-secret-api-key
+```
+
+**Request Body:**
+```json
+{
+  "name": "New Product",
+  "description": "Product description",
+  "price": 99.99,
+  "category": "electronics",
+  "inStock": true
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Product created successfully",
+  "product": {
+    "id": "generated-uuid",
+    "name": "New Product",
+    "description": "Product description",
+    "price": 99.99,
+    "category": "electronics",
+    "inStock": true
+  }
+}
+```
+
+---
+
+#### **PUT /api/products/:id** 🔒
+Update an existing product (requires authentication).
+
+**Headers:**
+```
+Content-Type: application/json
+x-api-key: your-secret-api-key
+```
+
+**Request Body:**
+```json
+{
+  "name": "Updated Product",
+  "description": "Updated description",
+  "price": 149.99,
+  "category": "electronics",
+  "inStock": false
+}
+```
+
+---
+
+#### **DELETE /api/products/:id** 🔒
+Delete a product (requires authentication).
+
+**Headers:**
+```
+x-api-key: your-secret-api-key
+```
+
+**Response:**
+```json
+{
+  "message": "Product deleted successfully",
+  "product": { ... }
+}
+```
+
+---
+
+#### **GET /api/products/search**
+Search products by name or description.
+
+**Query Parameters:**
+- `q` (string, required): Search term
+
+**Example Request:**
+```
+GET /api/products/search?q=laptop
+```
+
+**Response:**
+```json
+{
+  "searchTerm": "laptop",
+  "results": [...],
+  "count": 2
+}
+```
+
+---
+
+#### **GET /api/stats**
+Get product statistics and analytics.
+
+**Response:**
+```json
+{
+  "total": 5,
+  "byCategory": {
+    "electronics": 3,
+    "kitchen": 1,
+    "furniture": 1
+  },
+  "inStock": 4,
+  "outOfStock": 1,
+  "totalValue": 2500,
+  "averagePrice": 500,
+  "priceRange": {
+    "min": 50,
+    "max": 1200
+  }
+}
+```
+
+## 🧪 Testing Examples
+
+### Using curl
+
+**Get all products:**
+```bash
+curl http://localhost:3000/api/products
+```
+
+**Create a new product:**
+```bash
+curl -X POST http://localhost:3000/api/products \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: your-secret-api-key" \
+  -d '{
+    "name": "Test Product",
+    "description": "A test product",
+    "price": 29.99,
+    "category": "test",
+    "inStock": true
+  }'
+```
+
+**Search products:**
+```bash
+curl "http://localhost:3000/api/products/search?q=laptop"
+```
+
+### Using Postman/Insomnia
+
+1. **Import the API endpoints** using the documentation above
+2. **Set up environment variables:**
+   - `base_url`: `http://localhost:3000`
+   - `api_key`: `your-secret-api-key`
+3. **Test all CRUD operations** with the provided examples
+
+## 🏗️ Project Structure
+
+```
+├── server.js          # Main application file
+├── package.json       # Dependencies and scripts
+├── README.md          # This documentation
+├── .env.example       # Environment variables template
+└── Week2-Assignment.md # Assignment requirements
+```
+
+## 🔧 Middleware Implementation
+
+### Custom Logger Middleware
+Logs all incoming requests with timestamp, method, and URL.
+
+### Authentication Middleware
+Protects sensitive routes (POST, PUT, DELETE) by validating API key in headers.
+
+### Validation Middleware
+Validates product data for creation and updates:
+- Name: Required, non-empty string
+- Description: Required, non-empty string  
+- Price: Required, positive number
+- Category: Required, non-empty string
+- inStock: Optional boolean
+
+### Error Handling Middleware
+- Custom error classes for different error types
+- Proper HTTP status codes
+- Detailed error messages
+- Global error catching for async routes
+
+## 🛡️ Error Handling
+
+The API implements comprehensive error handling:
+
+- **400 Bad Request**: Invalid input data, validation errors
+- **401 Unauthorized**: Missing or invalid API key
+- **404 Not Found**: Product or route not found
+- **500 Internal Server Error**: Unexpected server errors
+
+## 🎯 Advanced Features
+
+### Filtering
+Filter products by:
+- Category: `?category=electronics`
+- Stock status: `?inStock=true`
+
+### Pagination
+Navigate large datasets:
+- Page number: `?page=2`
+- Items per page: `?limit=5`
+
+### Search
+Search across product names and descriptions:
+- Search term: `?q=laptop`
+
+### Statistics
+Get insights about your product catalog:
+- Total counts by category
+- Stock status distribution
+- Price analytics
+
+## 📝 Environment Variables
+
+Create a `.env` file based on `.env.example`:
+
+```env
+PORT=3000
+API_KEY=your-secret-api-key
+NODE_ENV=development
+```
+
+## 🚀 Deployment
+
+The application is ready for deployment to platforms like:
+- Heroku
+- Vercel
+- Railway
+- DigitalOcean App Platform
+
+Make sure to set the `PORT` environment variable for production deployment.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the ISC License - see the package.json file for details.
+
+---
+
+**🎉 Assignment Complete!** This implementation fulfills all requirements for the Week 2 Express.js assignment, including CRUD operations, middleware, error handling, and advanced features.
